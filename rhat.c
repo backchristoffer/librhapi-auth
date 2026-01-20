@@ -22,7 +22,6 @@ size_t write_callback(void *ptr, size_t size, size_t nmemb, struct Buffer *buffe
 
 
 int main() {
-	printf("DEBUG: START\n");
 	CURL *curl = curl_easy_init();
 	
 	if (!curl) {
@@ -58,8 +57,7 @@ int main() {
 		struct json_object *access_token;
 
 		if (json_object_object_get_ex(parsed_json, "access_token", &access_token)) {
-			printf("Success: Token extracted\n");
-			printf("--------TOKEN----------\n%s\n", json_object_get_string(access_token));
+			printf("%s\n", json_object_get_string(access_token));
 			
 		}else{
 			fprintf(stderr, "Error: Access token not found\n");
@@ -70,6 +68,5 @@ int main() {
 	curl_easy_cleanup(curl);
 
 	free(response.data);
-	printf("DEBUG: END\n");
 	return 0;
 }
