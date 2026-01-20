@@ -1,3 +1,5 @@
+#bin - will be standard bin built
+rhat
 #env
 .env
 # Prerequisites
