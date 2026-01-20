@@ -1,6 +1,8 @@
 #bin - will be standard bin built
 *rhat
 rhat
+rhapi_auth
+rhapi_test
 #env
 .env
 # Prerequisites

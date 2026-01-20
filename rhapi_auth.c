@@ -11,7 +11,7 @@ struct Buffer {
 	size_t length;
 };
 
-size_t write_callback(void *ptr, size_t size, size_t nmemb, struct Buffer *buffer) {
+static size_t write_callback(void *ptr, size_t size, size_t nmemb, struct Buffer *buffer) {
 	size_t new_length = size * nmemb;
 	char *new_ptr = realloc(buffer->data, buffer->length + new_length +1);
 	if (!new_ptr) return 0;
@@ -38,6 +38,12 @@ char* rhapi_get_token(void) {
 	}
 	
 	struct Buffer response = { .data = malloc(1), .length = 0 };
+	if (response.data == NULL) {
+		fprintf(stderr, "ERROR: response.data == NULL");
+		curl_easy_cleanup(curl);
+		return NULL;
+	}
+
 	char post_fields[4096];
 	snprintf(post_fields, sizeof(post_fields), "grant_type=refresh_token&client_id=rhsm-api&refresh_token=%s", offline_token);
 	
@@ -53,10 +59,10 @@ char* rhapi_get_token(void) {
 		struct json_object *parsed_json = json_tokener_parse(response.data);
 		struct json_object *access_token;
 		
-		if (json_object_object_get_ex(parsed, "access_token", &token_obj)) {
-			final_token = strdup(json_object_get_string(token_obj));
+		if (json_object_object_get_ex(parsed_json, "access_token", &access_token)) {
+			final_token = strdup(json_object_get_string(access_token));
 		}
-		json_object_put(parsed);
+		json_object_put(parsed_json);
 	}
 
 	curl_easy_cleanup(curl);
