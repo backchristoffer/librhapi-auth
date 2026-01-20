@@ -1,3 +1,3 @@
-# C library for red hat api auth
-Generates Red Hat API access token from your Red Hat API OFFLINE TOKEN and returns it. 
+# C library for Red Hat APIs
+- Authentication: Returns access token from OFFLINE TOKEN
 
