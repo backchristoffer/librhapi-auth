@@ -25,7 +25,7 @@ size_t write_callback(void *ptr, size_t size, size_t nmemb, struct Buffer *buffe
 }
 
 
-chat* rhapi_get_token(void) {
+char* rhapi_get_token(void) {
 	char *offline_token = getenv("RH_OFFLINE_TOKEN");
 	if (!offline_token) {
 		fprintf(stderr, "ERROR: RH_OFFLINE_TOKEN not found.\n");
