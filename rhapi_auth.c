@@ -70,3 +70,45 @@ char* rhapi_get_token(void) {
 
 	return final_token;
 }
+
+char* rhapi_fetch_data(const char *url, const char *token) {
+	if (!url || !token) return NULL;
+
+	CURL *curl = curl_easy_init();
+	if (!curl) return NULL;
+
+	struct Buffer response = {
+		.data = malloc(1),
+		.length = 0
+	};
+
+	if (!response.data) {
+		curl_easy_cleanup(curl);
+		return NULL;
+	}
+
+	struct curl_slist *headers = NULL;
+	char auth_header[4096];
+	snprintf(auth_header, sizeof(auth_header), "Authorization: Bearer %s", token);
+	headers = curl_slist_append(headers, auth_header);
+
+	curl_easy_setopt(curl, CURLOPT_URL, url);
+	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+
+	CURLcode res = curl_easy_perform(curl);
+	char *result_data = NULL;
+
+	if (res == CURLE_OK) {
+		result_data = strdup(response.data);
+	}else {
+		fprintf(stderr, "Data fetch failed: %s\n", curl_easy_strerror(res));
+	}
+
+	curl_slist_free_all(headers);
+	curl_easy_cleanup(curl);
+	free(response.data);
+
+	return(result_data);
+}
