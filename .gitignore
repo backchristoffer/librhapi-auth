@@ -3,6 +3,7 @@
 rhat
 rhapi_auth
 rhapi_test
+rh_monitor
 #env
 .env
 # Prerequisites
